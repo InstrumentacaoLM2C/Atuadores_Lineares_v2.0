@@ -25,4 +25,6 @@ void moverUniforme1();
 
 void moverUniforme2();
 
+void subsidencia();
+
 #  endif
