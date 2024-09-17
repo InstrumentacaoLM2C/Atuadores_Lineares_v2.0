@@ -123,23 +123,17 @@ void checkSerial() //method for receiving the commands
       
       case 'V':         //First character is an V = set velocity
         x = data.substring(1);
-        y = x.toFloat();
-        if(200<y<8000){
-          if(motor == '1'){  
-            receivedDelay1 = y;
-            Serial.println("/Velocidade do motor 1: " + x + " Pulsos por segundo");
-
-
-          }
-          else if(motor == '2'){
-            Serial.println("/Velocidade do motor 2: " + x + " Pulsos por segundo");
-
-            receivedDelay2 = y;
-          }
+        float veloc = x.toFloat(); //recebe velocidade e transforma em float
+        if(motor == '1'){  
+          receivedDelay1 = veloc;
+          Serial.println("/Velocidade do motor 1: " + x + " Pulsos por segundo");}
+          
+        else if(motor == '2'){
+          Serial.println("/Velocidade do motor 2: " + x + " Pulsos por segundo");
+          receivedDelay2 = veloc;
         }
-        else{
-          Serial.println("Q"); //Printa a mensagem no aplicativo do vs code: "Valor de velocidade inválido! Insira um valor entre 200 e 8000 pulsos/segundo
-        }
+        
+
 
       break;
 
@@ -222,7 +216,7 @@ void checkSerial() //method for receiving the commands
       case 'K':
         subsidencia(); // Função que movimenta o motor para frente e para trás (2 voltas completas) ativando o mecanismo de subsidência
       break;
-      
+
       case 'T': // recebe todas as informações do motor de uma vez e aciona o motor
         x = data.substring(1);
 
