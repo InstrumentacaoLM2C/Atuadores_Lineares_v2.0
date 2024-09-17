@@ -1,5 +1,14 @@
 #include "functions.h"
 
+//Variaveis para comunicação serial
+
+char receivedCommand; //character for commands
+String dadoPulsos, dadoVelocidade, dadoPosicao, dadoLaser, dadoCteCalibracao, dadosMotor; //variavél usada para receber strings pelo serial
+float y, velocidade;//variavél usada para receber floats
+
+String data;
+char d1; 
+
 
 void checkSerial() //method for receiving the commands
 {
@@ -58,14 +67,14 @@ void checkSerial() //method for receiving the commands
 
       case 'P':         //First character is an P = set qntd of pulses to send
         // a cada pulso se movimenta 0,6 mm -> conta: (1,8 \ (3 * 4)) * 4mm do passo
-        x = data.substring(1);
+        dadoPulsos = data.substring(1);
         if(motor == '1'){
-          receivedPulsesDistance1 = x.toFloat(); //value for the steps
+          receivedPulsesDistance1 = dadoPulsos.toFloat(); //value for the steps
           Serial.print("/Pulsos motor 1: ");
           Serial.println(receivedPulsesDistance1);
         }
         else if(motor == '2'){
-          receivedPulsesDistance2 = x.toFloat(); //value for the steps
+          receivedPulsesDistance2 = dadoPulsos.toFloat(); //value for the steps
           Serial.print("/Pulsos motor 2: ");
           Serial.println(receivedPulsesDistance2);
 
@@ -122,15 +131,15 @@ void checkSerial() //method for receiving the commands
       break;
       
       case 'V':         //First character is an V = set velocity
-        x = data.substring(1);
-        float veloc = x.toFloat(); //recebe velocidade e transforma em float
+        dadoVelocidade = data.substring(1);
+        velocidade = dadoVelocidade.toFloat(); //recebe velocidade e transforma em float
         if(motor == '1'){  
-          receivedDelay1 = veloc;
-          Serial.println("/Velocidade do motor 1: " + x + " Pulsos por segundo");}
+          receivedDelay1 = velocidade;
+          Serial.println("/Velocidade do motor 1: " + dadoVelocidade + " Pulsos por segundo");}
           
         else if(motor == '2'){
-          Serial.println("/Velocidade do motor 2: " + x + " Pulsos por segundo");
-          receivedDelay2 = veloc;
+          Serial.println("/Velocidade do motor 2: " + dadoVelocidade + " Pulsos por segundo");
+          receivedDelay2 = velocidade;
         }
         
 
@@ -154,8 +163,8 @@ void checkSerial() //method for receiving the commands
 
       case 'O': //  Insere um valor para a posição calculada do primeiro motor. 
         delayMicroseconds(1000); 
-        x = data.substring(1);
-        posicao_calculada1 = x.toFloat();
+        dadoPosicao = data.substring(1);
+        posicao_calculada1 = dadoPosicao.toFloat();
         delayMicroseconds(1000); 
         posicao_calculadaStr1  = String(posicao_calculada1);
         Serial.println('p'+ posicao_calculadaStr1);
@@ -163,8 +172,8 @@ void checkSerial() //method for receiving the commands
 
       case 'o': //  Insere um valor para a posição calculada do segundo motor. 
         delayMicroseconds(1000); 
-        x = data.substring(1);
-        posicao_calculada2 = x.toFloat();
+        dadoPosicao = data.substring(1);
+        posicao_calculada2 = dadoPosicao.toFloat();
         delayMicroseconds(1000); 
         posicao_calculadaStr2  = String(posicao_calculada2);
         Serial.println('P'+ posicao_calculadaStr2);
@@ -172,8 +181,8 @@ void checkSerial() //method for receiving the commands
 
       case 'J': //sets intercept of the laser
 
-        x = data.substring(1);
-        zero_laser = x.toFloat();
+        dadoLaser = data.substring(1);
+        zero_laser = dadoLaser.toFloat();
       break;
       
       
@@ -183,16 +192,16 @@ void checkSerial() //method for receiving the commands
       break;
 
       case 'U': //Insere constante de calibração dos motores
-        x = data.substring(1);
+        dadoCteCalibracao = data.substring(1);
         if(motor == 1){
-          constanteCalibracao1 = x.toFloat();
+          constanteCalibracao1 = dadoCteCalibracao.toFloat();
         }
         else{
-          constanteCalibracao2 = x.toFloat();
+          constanteCalibracao2 = dadoCteCalibracao.toFloat();
         }
 
         Serial.print("w"); //Printa a constante de calibração no app do VSCode 
-        Serial.println(x);
+        Serial.println(dadoCteCalibracao);
       break;
 
 
@@ -218,18 +227,18 @@ void checkSerial() //method for receiving the commands
       break;
 
       case 'T': // recebe todas as informações do motor de uma vez e aciona o motor
-        x = data.substring(1);
+        dadosMotor = data.substring(1);
 
         //código para separar as strings 
-        int firstSeparatorIndex = x.indexOf(';');
-        int secondSeparatorIndex = x.indexOf(';', firstSeparatorIndex + 1);
-        int thirdSeparatorIndex = x.indexOf(';', secondSeparatorIndex + 1);
+        int firstSeparatorIndex = dadosMotor.indexOf(';');
+        int secondSeparatorIndex = dadosMotor.indexOf(';', firstSeparatorIndex + 1);
+        int thirdSeparatorIndex = dadosMotor.indexOf(';', secondSeparatorIndex + 1);
 
         // Extract substrings based on the positions of the separators
-        String pulso = x.substring(0, firstSeparatorIndex); // "primeiro numero"
-        String velocidade = x.substring(firstSeparatorIndex + 1, secondSeparatorIndex); // "segundo numero"
-        String direcao = x.substring(secondSeparatorIndex + 1, thirdSeparatorIndex); // "caracter B ou C"
-        String mover = x.substring(thirdSeparatorIndex + 1); // "caracter H ou x"
+        String pulso = dadosMotor.substring(0, firstSeparatorIndex); // "primeiro numero"
+        String velocidade = dadosMotor.substring(firstSeparatorIndex + 1, secondSeparatorIndex); // "segundo numero"
+        String direcao = dadosMotor.substring(secondSeparatorIndex + 1, thirdSeparatorIndex); // "caracter B ou C"
+        String mover = dadosMotor.substring(thirdSeparatorIndex + 1); // "caracter H ou x"
 
         
         if(motor == '1'){
@@ -264,7 +273,7 @@ void checkSerial() //method for receiving the commands
           Serial.print("/Pulsos motor 2: ");
           Serial.println(receivedPulsesDistance2);
           //recebe velocidade
-          Serial.println("/Velocidade do motor 2: " + x + " Pulsos por segundo");
+          Serial.println("/Velocidade do motor 2: " + dadosMotor + " Pulsos por segundo");
           receivedDelay2 = velocidade.toFloat();
           if(direcao == "B"){
             Serial.println("B"); // Printa a mensagem no aplicativo do vs code:: Direcão: Para baixo

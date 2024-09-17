@@ -4,13 +4,14 @@
 #include <Arduino.h>
 
 
+
 void calibracao(){
-  float posAnterior;
-  float posMeio;
-  float posFinal;
+  //float posAnterior;
+  //float posMeio;
+  //float posFinal;
   float posVar; //variação media
-  float posVar1; //variação inicial
-  float posVar2; //variação final
+  //float posVar1; //variação inicial
+  //float posVar2; //variação final
   float deslocamento_por_pulso;
   char deslocamento_por_pulso_str[15];
   float leituras[11];   // Lista para guardar deslocamentos da calibração
@@ -20,7 +21,7 @@ void calibracao(){
   digitalWrite(driverEn1, 1);
   Serial.println('j'); //Printa a mensagem no aplicativo do vs code: Calibração iniciada!
   posicao_sensor();
-  posAnterior = posicao_calculada_sensor;
+  //posAnterior = posicao_calculada_sensor;
 
   while(contador != 10){    // move o motor 10 vezes
     if(MotorSeMovendo == 0){ //espera o motor parar de se mover para mandar os proxímos comandos
@@ -45,7 +46,7 @@ void calibracao(){
           delayMicroseconds(100);
         }
         leituras[contador -1] = posicao_calculada_sensor; 
-        posMeio = posicao_calculada_sensor;
+        //posMeio = posicao_calculada_sensor;
         
         stepper1.move(receivedPulsesDistance1*(direcao1)); //set distance  
       }
@@ -101,10 +102,10 @@ void calibracao(){
           soma += variacoes[i];
       }
       
-      posFinal = posicao_calculada_sensor;
+      //posFinal = posicao_calculada_sensor;
       
-      posVar1 = abs(posMeio - posAnterior);
-      posVar2 = abs(posFinal - posMeio);
+      //posVar1 = abs(posMeio - posAnterior);
+      //posVar2 = abs(posFinal - posMeio);
       //posVar = (posVar1 + posVar2)/2;
       posVar = soma/10;
       deslocamento_por_pulso = posVar/60000; //A deslocamento por pulso vai ser a distancia que variou durante o trajeto dividido pela quantidade de pulsos enviada (esse 2 aparece pois o driver está enviado o dobro de pulsos q o motor realmente consegue ler)

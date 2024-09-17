@@ -2,6 +2,7 @@
 #include <AccelStepper.h>
 #include <Arduino.h>
 
+
 void continuousRun1() //method for the motor 1
 {
   if (runallowed1 == true)
