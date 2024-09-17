@@ -221,6 +221,68 @@ void checkSerial() //method for receiving the commands
 
       case 'K':
         subsidencia(); // Função que movimenta o motor para frente e para trás (2 voltas completas) ativando o mecanismo de subsidência
+      break;
+      
+      case 'T': // recebe todas as informações do motor de uma vez e aciona o motor
+        x = data.substring(1);
+
+        //código para separar as strings 
+        int firstSeparatorIndex = x.indexOf(';');
+        int secondSeparatorIndex = x.indexOf(';', firstSeparatorIndex + 1);
+        int thirdSeparatorIndex = x.indexOf(';', secondSeparatorIndex + 1);
+
+        // Extract substrings based on the positions of the separators
+        String pulso = x.substring(0, firstSeparatorIndex); // "primeiro numero"
+        String velocidade = x.substring(firstSeparatorIndex + 1, secondSeparatorIndex); // "segundo numero"
+        String direcao = x.substring(secondSeparatorIndex + 1, thirdSeparatorIndex); // "caracter B ou C"
+        String mover = x.substring(thirdSeparatorIndex + 1); // "caracter H ou x"
+
+        
+        if(motor == '1'){
+          //liga motor
+          digitalWrite(driverEn1, 1);
+          Serial.println("/Motor 1 ligado!");
+          //recebe pulsos
+          receivedPulsesDistance1 = pulso.toFloat(); //value for the steps
+          Serial.print("/Pulsos motor 1: ");
+          Serial.println(receivedPulsesDistance1);
+          //recebe velocidade
+          receivedDelay1 = velocidade.toFloat();
+          Serial.println("/Velocidade do motor 1: " + velocidade + " Pulsos por segundo");
+          if(direcao == "B"){
+            Serial.println("b"); // Printa a mensagem no aplicativo do vs code:: Direcão: Para baixo
+            direcao1 = 1;
+          }
+          else if(direcao == "C"){
+              Serial.println("c"); // Printa a mensagem no aplicativo do vs code:: Direcão: Para cima
+              direcao1 = -1;
+          }
+          if(mover == "H"){moverUniforme1();}
+
+          
+        }
+        else if(motor == '2'){
+          //liga motor
+          digitalWrite(driverEn2, 1);
+          Serial.println("/Motor 2 ligado!");
+          //recebe pulsos
+          receivedPulsesDistance2 = pulso.toFloat(); //value for the steps
+          Serial.print("/Pulsos motor 2: ");
+          Serial.println(receivedPulsesDistance2);
+          //recebe velocidade
+          Serial.println("/Velocidade do motor 2: " + x + " Pulsos por segundo");
+          receivedDelay2 = velocidade.toFloat();
+          if(direcao == "B"){
+            Serial.println("B"); // Printa a mensagem no aplicativo do vs code:: Direcão: Para baixo
+            direcao2 = 1;
+          }
+          else if(direcao == "C"){
+              Serial.println("C"); // Printa a mensagem no aplicativo do vs code:: Direcão: Para cima
+              direcao1 = -1;
+          }
+          if(mover == "H"){moverUniforme2();}
+          
+        }
       break;   
     }
   }
