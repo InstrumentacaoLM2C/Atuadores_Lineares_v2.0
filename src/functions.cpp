@@ -106,7 +106,7 @@ void posicao_sensor() {
     String posicao_calculada_Sensor_Str = String(posicao_calculada_sensor);
     String readingStr = String(averageReading);
     // Print the position
-    Serial.println('l' + posicao_calculada_Sensor_Str); 
+    //Serial.println('l' + posicao_calculada_Sensor_Str); 
   }
 }
 
