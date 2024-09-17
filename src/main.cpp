@@ -1,5 +1,5 @@
-#include "../include/header.h"
-#include "../include/functions.h"
+
+#include "functions.h"
 
 
 void setup() {

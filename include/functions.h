@@ -1,6 +1,8 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
+#include "header.h"
+
 void continuousRun1();
 
 void continuousRun2();

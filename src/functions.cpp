@@ -1,4 +1,3 @@
-#include "header.h"
 #include "functions.h"
 #include <AccelStepper.h>
 #include <Arduino.h>

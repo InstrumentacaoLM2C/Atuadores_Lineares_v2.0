@@ -1,7 +1,5 @@
-#include "../include/header.h"
 #include "functions.h"
-#include <AccelStepper.h>
-#include <Arduino.h>
+
 
 void checkSerial() //method for receiving the commands
 {
