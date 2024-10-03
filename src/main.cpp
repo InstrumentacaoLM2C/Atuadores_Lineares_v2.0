@@ -28,7 +28,7 @@ const int numReadings = 40; // Number of readings to average
 int readings[numReadings];   // Array to store sensor readings
 int index = 0;               // Index for the readings array
 int total = 0;               // Total sum of readings
-unsigned long time_now = -1; // Variable to store the last time a reading was taken
+signed long time_now = -1; // Variable to store the last time a reading was taken
 const unsigned long interval = 50; // Interval between readings in milliseconds
 int sensor_posicao = A4;
 float zero_laser = 50;
@@ -183,6 +183,7 @@ void continuousRun2() //method for the motor 2
 
 void checkSerial() //method for receiving the commands
 {
+    float velocidadeMinimaMotor = 200, velocidadeMaximaMotor = 800;
     if(Serial.available()){
     data = Serial.readStringUntil('#');
     d1 = data.charAt(0);
@@ -304,19 +305,21 @@ void checkSerial() //method for receiving the commands
       case DEFINIR_VELOCIDADE:         //First character is an V = set velocity
         x = data.substring(1);
         y = x.toFloat();
-        if(200<y<8000){
-          if(motor == '1'){  
-            receivedDelay1 = y;
-            Serial.println("/Velocidade do motor 1: " + x + " Pulsos por segundo");
+        if(y > velocidadeMinimaMotor){
+          if(y < velocidadeMaximaMotor){
+            if(motor == '1'){  
+              receivedDelay1 = y;
+              Serial.println("/Velocidade do motor 1: " + x + " Pulsos por segundo");
 
 
+            }
+            else if(motor == '2'){
+              Serial.println("/Velocidade do motor 2: " + x + " Pulsos por segundo");
+
+              receivedDelay2 = y;
+            }
           }
-          else if(motor == '2'){
-            Serial.println("/Velocidade do motor 2: " + x + " Pulsos por segundo");
-
-            receivedDelay2 = y;
-          }
-        }
+        }  
         else{
           Serial.println("Q"); //Printa a mensagem no aplicativo do vs code: "Valor de velocidade inválido! Insira um valor entre 200 e 8000 pulsos/segundo
         }
@@ -531,8 +534,8 @@ void calibracao(){ //função para calibrar o atuador automaticamente utilizando
   float posMeio;
   float posFinal;
   float posVar; //variação media
-  float posVar1; //variação inicial
-  float posVar2; //variação final
+  //float posVar1; //variação inicial
+  //float posVar2; //variação final
   float deslocamento_por_pulso;
   char deslocamento_por_pulso_str[15];
   float leituras[11];   // Lista para guardar deslocamentos da calibração
@@ -625,8 +628,8 @@ void calibracao(){ //função para calibrar o atuador automaticamente utilizando
       
       posFinal = posicao_calculada_sensor;
       
-      posVar1 = abs(posMeio - posAnterior);
-      posVar2 = abs(posFinal - posMeio);
+      //posVar1 = abs(posMeio - posAnterior);
+      //posVar2 = abs(posFinal - posMeio);
       //posVar = (posVar1 + posVar2)/2;
       posVar = soma/10;
       deslocamento_por_pulso = posVar/60000; //A deslocamento por pulso vai ser a distancia que variou durante o trajeto dividido pela quantidade de pulsos enviada (esse 2 aparece pois o driver está enviado o dobro de pulsos q o motor realmente consegue ler)
